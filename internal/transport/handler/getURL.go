@@ -10,11 +10,6 @@ import (
 
 func (h Handler) GetURL(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		contentType := r.Header.Get("Content-Type")
-		if contentType != "text/plain" {
-			http.Error(w, "Неверный тип данных", http.StatusBadRequest)
-			return
-		}
 		id := r.URL.String()[1:]
 		shortURL := utils.MakeShortURL(&id)
 		longURL, err := h.service.GetURL(shortURL)
@@ -23,12 +18,16 @@ func (h Handler) GetURL(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		w.Header().Set("Content-Type", "text/plain")
+		w.Header().Set("Location", string(*longURL))
 		w.WriteHeader(http.StatusPermanentRedirect)
-		io.WriteString(w, string(*longURL))
-
 	}
 
 	if r.Method == http.MethodPost {
+		contentType := r.Header.Get("Content-Type")
+		if contentType != "text/plain" {
+			http.Error(w, "Неверный тип данных", http.StatusBadRequest)
+			return
+		}
 		bytesData, err := io.ReadAll(r.Body)
 		if err != nil {
 			http.Error(w, "Не удалось прочитать тело запроса", http.StatusBadRequest)
