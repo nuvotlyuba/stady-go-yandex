@@ -3,6 +3,7 @@ package handler
 import (
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/nuvotlyuba/study-go-yandex/internal/models"
 	"github.com/nuvotlyuba/study-go-yandex/internal/utils"
@@ -24,7 +25,7 @@ func (h Handler) GetURL(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodPost {
 		contentType := r.Header.Get("Content-Type")
-		if contentType != "text/plain" {
+		if strings.Contains(contentType, "text/plain") {
 			http.Error(w, "Неверный тип данных", http.StatusBadRequest)
 			return
 		}
