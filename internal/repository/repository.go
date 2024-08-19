@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/nuvotlyuba/study-go-yandex/internal/models"
 )
@@ -12,6 +12,8 @@ func New() *Repository {
 	return &Repository{}
 }
 
+var ErrNotFoundURL = errors.New("данная ссылка не найдена")
+
 var DataURL = make(map[models.URL]models.URL)
 
 func (r Repository) SaveURL(shotURL *models.URL, longURL *models.URL) {
@@ -21,7 +23,7 @@ func (r Repository) SaveURL(shotURL *models.URL, longURL *models.URL) {
 func (r Repository) GetURL(shotURL *models.URL) (*models.URL, error) {
 	longURL, ok := DataURL[*shotURL]
 	if !ok {
-		return nil, fmt.Errorf("Данной %s ссылки нет", *shotURL)
+		return nil, ErrNotFoundURL
 	}
 	return &longURL, nil
 }
