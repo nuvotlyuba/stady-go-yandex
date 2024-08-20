@@ -51,6 +51,7 @@ func TestPostURL(t *testing.T) {
 			h := New(s)
 			h.PostURL(w, r)
 			res := w.Result()
+			defer res.Body.Close()
 
 			assert.Equal(t, tt.want.contentType, res.Header.Get("Content-Type"), "Отличный от %s  Conent-Type", tt.want.contentType)
 			assert.Equal(t, tt.want.statusCode, res.StatusCode, "Отличный от %d статус код", tt.want.statusCode)
@@ -98,6 +99,7 @@ func TestGetURL(t *testing.T) {
 			h := New(s)
 			h.GetURL(w, r)
 			res := w.Result()
+			defer res.Body.Close()
 			assert.Equal(t, tt.want.contentType, res.Header.Get("Content-Type"), "Отличный от %s  Conent-Type", tt.want.contentType)
 			assert.Equal(t, tt.want.statusCode, res.StatusCode, "Отличный от %d статус код", tt.want.statusCode)
 		})
