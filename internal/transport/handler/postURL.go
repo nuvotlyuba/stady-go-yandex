@@ -8,10 +8,6 @@ import (
 )
 
 func (h Handler) PostURL(w http.ResponseWriter, r *http.Request) {
-	contentType := r.Header.Get("Content-Type")
-	if contentType != "text/plain" {
-		http.Error(w, "Неверный тип данных", http.StatusBadRequest)
-	}
 	if r.Method == http.MethodPost {
 		bytesData, err := io.ReadAll(r.Body)
 		if err != nil {
