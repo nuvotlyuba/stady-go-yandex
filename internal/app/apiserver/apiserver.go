@@ -40,7 +40,7 @@ func (s *APIServer) Start() error {
 }
 
 func (s *APIServer) addRouter(h *handler.Handler) *http.ServeMux {
-	s.router.HandleFunc(`/`, h.GetURL)
+	s.router.HandleFunc(`/`, h.Handler)
 
 	return s.router
 }
