@@ -23,11 +23,6 @@ func (h Handler) GetURL(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Method == http.MethodPost {
-		// contentType := r.Header.Get("Content-Type")
-		// if strings.Contains(contentType, "text/plain") {
-		// 	http.Error(w, "Неверный тип данных", http.StatusBadRequest)
-		// 	return
-		// }
 		bytesData, err := io.ReadAll(r.Body)
 		if err != nil {
 			http.Error(w, "Не удалось прочитать тело запроса", http.StatusBadRequest)
