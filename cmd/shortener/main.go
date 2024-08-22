@@ -5,6 +5,7 @@ import (
 )
 
 func main() {
+	parseFlags()
 	cfg := apiserver.NewConfig()
 	s := apiserver.New(cfg)
 	if err := s.Start(); err != nil {
