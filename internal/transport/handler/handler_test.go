@@ -46,7 +46,7 @@ func TestPostURL(t *testing.T) {
 			r := httptest.NewRequest(tt.method, tt.request, strings.NewReader(tt.body))
 			w := httptest.NewRecorder()
 			r.Header.Set("Content-Type", tt.want.contentType)
-			repo := repository.New()
+			repo := repository.NewVarRepository()
 			s := service.New(repo)
 			h := New(s)
 			h.PostURL(w, r)
@@ -94,7 +94,7 @@ func TestGetURL(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			r := httptest.NewRequest(tt.method, tt.request, nil)
 			w := httptest.NewRecorder()
-			repo := repository.New()
+			repo := repository.NewVarRepository()
 			s := service.New(repo)
 			h := New(s)
 			h.GetURL(w, r)

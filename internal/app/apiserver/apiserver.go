@@ -3,6 +3,7 @@ package apiserver
 import (
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/nuvotlyuba/study-go-yandex/internal/repository"
 	"github.com/nuvotlyuba/study-go-yandex/internal/service"
 	"github.com/nuvotlyuba/study-go-yandex/internal/transport/handler"
@@ -10,19 +11,19 @@ import (
 
 type APIServer struct {
 	config *APIConfig
-	router *http.ServeMux
+	router *chi.Mux
 }
 
 func New(config *APIConfig) *APIServer {
 	return &APIServer{
 		config: config,
-		router: http.NewServeMux(),
+		router: chi.NewRouter(),
 	}
 }
 
 func (s *APIServer) Start() error {
-	repo := repository.New()
-	service := service.New(repo)
+	repoVar := repository.NewVarRepository()
+	service := service.New(repoVar)
 	handler := handler.New(service)
 
 	s.addRouter(handler)
@@ -39,8 +40,10 @@ func (s *APIServer) Start() error {
 	return nil
 }
 
-func (s *APIServer) addRouter(h *handler.Handler) *http.ServeMux {
+func (s *APIServer) addRouter(h *handler.Handler) *chi.Mux {
 	s.router.HandleFunc(`/`, h.Handler)
+	s.router.Get("/{id}", h.GetURL)
+	s.router.Post("/", h.PostURL)
 
 	return s.router
 }
