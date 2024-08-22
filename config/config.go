@@ -28,5 +28,4 @@ func (c Config) LoadConfig() {
 		log.Fatal(err)
 	}
 
-	log.Println(cfg)
 }
