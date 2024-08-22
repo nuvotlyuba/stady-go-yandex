@@ -41,7 +41,6 @@ func (s *APIServer) Start() error {
 }
 
 func (s *APIServer) addRouter(h *handler.Handler) *chi.Mux {
-	s.router.HandleFunc(`/`, h.Handler)
 	s.router.Get("/{id}", h.GetURL)
 	s.router.Post("/", h.PostURL)
 
