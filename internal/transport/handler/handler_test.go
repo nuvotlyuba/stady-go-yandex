@@ -100,11 +100,59 @@ func TestGetURL(t *testing.T) {
 			h.GetURL(w, r)
 			res := w.Result()
 			defer res.Body.Close()
-			assert.Equal(t, tt.want.contentType, res.Header.Get("Content-Type"), "Отличный от %s  Conent-Type", tt.want.contentType)
+			assert.Equal(t, tt.want.contentType, res.Header.Get("Content-Type"), "Отличный от %s  Content-Type", tt.want.contentType)
 			assert.Equal(t, tt.want.statusCode, res.StatusCode, "Отличный от %d статус код", tt.want.statusCode)
 		})
 	}
+}
 
+func TestPostJsonURL(t *testing.T) {
+	type want struct {
+		contentType string
+		statusCode  int
+	}
+
+	tests := []struct {
+		name    string
+		request string
+		body    string
+		method  string
+		want    want
+	}{
+		{
+			name:    "POST запрос JSON",
+			request: "/api/shorten",
+			body:    `{ "url": "https://yandex.ru" }`,
+			method:  http.MethodPost,
+			want: want{
+				contentType: JSON_CONTENT_TYPE,
+				statusCode:  201,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := httptest.NewRequest(tt.method, tt.request, strings.NewReader(tt.body))
+			w := httptest.NewRecorder()
+			r.Header.Set("Content-Type", tt.want.contentType)
+			repo := repository.NewVarRepository()
+			s := service.New(repo)
+			h := New(s)
+			h.PostJsonURL(w, r)
+			res := w.Result()
+			defer res.Body.Close()
+
+			assert.Equal(t, tt.want.contentType, res.Header.Get("Content-Type"), "Отличный от %s  Content-Type", tt.want.contentType)
+			assert.Equal(t, tt.want.statusCode, res.StatusCode, "Отличный от %d статус код", tt.want.statusCode)
+
+			body, err := io.ReadAll(res.Body)
+			require.NoError(t, err, "Ошибка чтения тела ответа")
+			err = res.Body.Close()
+			require.NoError(t, err)
+			assert.NotEmpty(t, string(body), "Тело ответа пустое")
+		})
+	}
 }
 
 func EnsureNewURL(token string, longURL string) {

@@ -19,4 +19,5 @@ func New(service service.Services) *Handler {
 type Handlers interface {
 	PostURL(w http.ResponseWriter, r *http.Request)
 	GetURL(w http.ResponseWriter, r *http.Request)
+	PostJsonURL(w http.ResponseWriter, r *http.Request)
 }

@@ -7,3 +7,11 @@ func (u URL) Point() *URL {
 }
 
 type URLData map[URL]URL
+
+type JsonURLRequest struct {
+	URL string `json:"url"`
+}
+
+type JsonURLResponse struct {
+	Result string `json:"result"`
+}
