@@ -35,7 +35,7 @@ func TestPostURL(t *testing.T) {
 			body:    "https://yandex.ru",
 			method:  http.MethodPost,
 			want: want{
-				contentType: "text/plain",
+				contentType: TextContentType,
 				statusCode:  201,
 			},
 		},
@@ -84,7 +84,7 @@ func TestGetURL(t *testing.T) {
 			request: fmt.Sprintf("/%s", *token),
 			method:  http.MethodGet,
 			want: want{
-				contentType: "text/plain",
+				contentType: TextContentType,
 				statusCode:  307,
 			},
 		},
@@ -106,7 +106,7 @@ func TestGetURL(t *testing.T) {
 	}
 }
 
-func TestPostJsonURL(t *testing.T) {
+func TestPostJSONURL(t *testing.T) {
 	type want struct {
 		contentType string
 		statusCode  int
@@ -125,7 +125,7 @@ func TestPostJsonURL(t *testing.T) {
 			body:    `{ "url": "https://yandex.ru" }`,
 			method:  http.MethodPost,
 			want: want{
-				contentType: JSON_CONTENT_TYPE,
+				contentType: JSONContentType,
 				statusCode:  201,
 			},
 		},
@@ -139,7 +139,7 @@ func TestPostJsonURL(t *testing.T) {
 			repo := repository.NewVarRepository()
 			s := service.New(repo)
 			h := New(s)
-			h.PostJsonURL(w, r)
+			h.PostJSONURL(w, r)
 			res := w.Result()
 			defer res.Body.Close()
 

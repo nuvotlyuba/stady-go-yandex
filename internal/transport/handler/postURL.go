@@ -22,7 +22,7 @@ func (h Handler) PostURL(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		w.Header().Set("Content-Type", string(TEXT_CONTENT_TYPE))
+		w.Header().Set("Content-Type", string(TextContentType))
 		w.WriteHeader(http.StatusCreated)
 		io.WriteString(w, string(*shortURL))
 	}
