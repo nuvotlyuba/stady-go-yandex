@@ -11,6 +11,7 @@ import (
 	"github.com/nuvotlyuba/study-go-yandex/internal/models"
 	"github.com/nuvotlyuba/study-go-yandex/internal/repository"
 	"github.com/nuvotlyuba/study-go-yandex/internal/service"
+	"github.com/nuvotlyuba/study-go-yandex/internal/types"
 	"github.com/nuvotlyuba/study-go-yandex/internal/utils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -35,7 +36,7 @@ func TestPostURL(t *testing.T) {
 			body:    "https://yandex.ru",
 			method:  http.MethodPost,
 			want: want{
-				contentType: TextContentType,
+				contentType: types.TextContentType,
 				statusCode:  201,
 			},
 		},
@@ -84,7 +85,7 @@ func TestGetURL(t *testing.T) {
 			request: fmt.Sprintf("/%s", *token),
 			method:  http.MethodGet,
 			want: want{
-				contentType: TextContentType,
+				contentType: types.TextContentType,
 				statusCode:  307,
 			},
 		},
@@ -125,7 +126,7 @@ func TestPostJSONURL(t *testing.T) {
 			body:    `{ "url": "https://yandex.ru" }`,
 			method:  http.MethodPost,
 			want: want{
-				contentType: JSONContentType,
+				contentType: types.JSONContentType,
 				statusCode:  201,
 			},
 		},

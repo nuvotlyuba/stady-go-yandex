@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/nuvotlyuba/study-go-yandex/internal/models"
+	"github.com/nuvotlyuba/study-go-yandex/internal/types"
 )
 
 func (h Handler) PostURL(w http.ResponseWriter, r *http.Request) {
@@ -22,7 +23,7 @@ func (h Handler) PostURL(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		w.Header().Set("Content-Type", string(TextContentType))
+		w.Header().Set("Content-Type", string(types.TextContentType))
 		w.WriteHeader(http.StatusCreated)
 		io.WriteString(w, string(*shortURL))
 	}

@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/nuvotlyuba/study-go-yandex/config"
+	"github.com/nuvotlyuba/study-go-yandex/internal/app/apiserver/gzip"
 	"github.com/nuvotlyuba/study-go-yandex/internal/app/apiserver/logger"
 	"github.com/nuvotlyuba/study-go-yandex/internal/repository"
 	"github.com/nuvotlyuba/study-go-yandex/internal/service"
@@ -32,6 +33,7 @@ func (s *APIServer) Start() error {
 	s.logger.Info("Server running ...", zap.String("address", s.config.ServerAddress))
 
 	s.router.Use(logger.Middleware)
+	s.router.Use(gzip.Middleware)
 	repoVar := repository.NewVarRepository()
 	service := service.New(repoVar)
 	handler := handler.New(service)

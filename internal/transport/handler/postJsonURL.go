@@ -6,12 +6,13 @@ import (
 
 	"github.com/nuvotlyuba/study-go-yandex/internal/app/apiserver/logger"
 	"github.com/nuvotlyuba/study-go-yandex/internal/models"
+	"github.com/nuvotlyuba/study-go-yandex/internal/types"
 	"go.uber.org/zap"
 )
 
 func (h Handler) PostJSONURL(w http.ResponseWriter, r *http.Request) {
 	contentType := r.Header.Get("Content-Type")
-	if contentType != string(JSONContentType) {
+	if contentType != string(types.JSONContentType) {
 		http.Error(w, "Unexpected content type", http.StatusBadRequest)
 		return
 	}
@@ -28,7 +29,7 @@ func (h Handler) PostJSONURL(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	w.Header().Set("Content-Type", string(JSONContentType))
+	w.Header().Set("Content-Type", string(types.JSONContentType))
 	w.WriteHeader(http.StatusCreated)
 
 	enc := json.NewEncoder(w)
