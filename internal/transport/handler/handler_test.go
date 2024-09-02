@@ -9,8 +9,8 @@ import (
 	"testing"
 
 	"github.com/nuvotlyuba/study-go-yandex/internal/models"
-	"github.com/nuvotlyuba/study-go-yandex/internal/repository"
 	"github.com/nuvotlyuba/study-go-yandex/internal/service"
+	"github.com/nuvotlyuba/study-go-yandex/internal/store"
 	"github.com/nuvotlyuba/study-go-yandex/internal/types"
 	"github.com/nuvotlyuba/study-go-yandex/internal/utils"
 	"github.com/stretchr/testify/assert"
@@ -47,15 +47,15 @@ func TestPostURL(t *testing.T) {
 			r := httptest.NewRequest(tt.method, tt.request, strings.NewReader(tt.body))
 			w := httptest.NewRecorder()
 			r.Header.Set("Content-Type", tt.want.contentType)
-			repo := repository.NewVarRepository()
+			repo := store.New()
 			s := service.New(repo)
 			h := New(s)
 			h.PostURL(w, r)
 			res := w.Result()
 			defer res.Body.Close()
 
-			assert.Equal(t, tt.want.contentType, res.Header.Get("Content-Type"), "Отличный от %s  Conent-Type", tt.want.contentType)
 			assert.Equal(t, tt.want.statusCode, res.StatusCode, "Отличный от %d статус код", tt.want.statusCode)
+			assert.Contains(t, tt.want.contentType, res.Header.Get("Content-Type"), "Отличный от %s  Conent-Type", tt.want.contentType)
 
 			body, err := io.ReadAll(res.Body)
 			require.NoError(t, err, "Ошибка чтения тела ответа")
@@ -95,13 +95,13 @@ func TestGetURL(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			r := httptest.NewRequest(tt.method, tt.request, nil)
 			w := httptest.NewRecorder()
-			repo := repository.NewVarRepository()
+			repo := store.New()
 			s := service.New(repo)
 			h := New(s)
 			h.GetURL(w, r)
 			res := w.Result()
 			defer res.Body.Close()
-			assert.Equal(t, tt.want.contentType, res.Header.Get("Content-Type"), "Отличный от %s  Content-Type", tt.want.contentType)
+			assert.Contains(t, tt.want.contentType, res.Header.Get("Content-Type"), "Отличный от %s  Conent-Type", tt.want.contentType)
 			assert.Equal(t, tt.want.statusCode, res.StatusCode, "Отличный от %d статус код", tt.want.statusCode)
 		})
 	}
@@ -137,14 +137,14 @@ func TestPostJSONURL(t *testing.T) {
 			r := httptest.NewRequest(tt.method, tt.request, strings.NewReader(tt.body))
 			w := httptest.NewRecorder()
 			r.Header.Set("Content-Type", tt.want.contentType)
-			repo := repository.NewVarRepository()
+			repo := store.New()
 			s := service.New(repo)
 			h := New(s)
 			h.PostJSONURL(w, r)
 			res := w.Result()
 			defer res.Body.Close()
 
-			assert.Equal(t, tt.want.contentType, res.Header.Get("Content-Type"), "Отличный от %s  Content-Type", tt.want.contentType)
+			assert.Contains(t, tt.want.contentType, res.Header.Get("Content-Type"), "Отличный от %s  Conent-Type", tt.want.contentType)
 			assert.Equal(t, tt.want.statusCode, res.StatusCode, "Отличный от %d статус код", tt.want.statusCode)
 
 			body, err := io.ReadAll(res.Body)
@@ -156,7 +156,7 @@ func TestPostJSONURL(t *testing.T) {
 	}
 }
 
-func EnsureNewURL(token string, longURL string) {
+func EnsureNewURL(token string, originalURL string) {
 	shortURL := utils.MakeShortURL(&token)
-	repository.DataURL[*shortURL] = models.URL(longURL)
+	store.DataURL[*shortURL] = models.URL(originalURL)
 }

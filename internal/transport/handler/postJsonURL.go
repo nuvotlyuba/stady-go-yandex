@@ -24,7 +24,7 @@ func (h Handler) PostJSONURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	shortURL, err := h.service.CreateURL(models.URL(jsonReq.URL).Point())
+	result, err := h.service.CreateURL(models.URL(jsonReq.URL).Point())
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -33,7 +33,7 @@ func (h Handler) PostJSONURL(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 
 	enc := json.NewEncoder(w)
-	if err := enc.Encode(models.JSONURLResponse{Result: string(*shortURL)}); err != nil {
+	if err := enc.Encode(models.JSONURLResponse{Result: string(result.ShortURL)}); err != nil {
 		logger.Debug("error encoding response", zap.Error(err))
 		http.Error(w, err.Error()+" -> marshal", http.StatusBadRequest)
 		return

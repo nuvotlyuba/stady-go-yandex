@@ -15,3 +15,9 @@ type JSONURLRequest struct {
 type JSONURLResponse struct {
 	Result string `json:"result"`
 }
+
+type ObjURL struct {
+	UUID        string `json:"uuid"`
+	ShortURL    URL    `json:"short_url"`
+	OriginalURL URL    `json:"original_url"`
+}

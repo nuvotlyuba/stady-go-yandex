@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 
@@ -17,14 +18,15 @@ func (h Handler) PostURL(w http.ResponseWriter, r *http.Request) {
 		}
 		strData := string(bytesData)
 
-		shortURL, err := h.service.CreateURL(models.URL(strData).Point())
+		result, err := h.service.CreateURL(models.URL(strData).Point())
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+		fmt.Println(err, "err!!!!!")
 
 		w.Header().Set("Content-Type", string(types.TextContentType))
 		w.WriteHeader(http.StatusCreated)
-		io.WriteString(w, string(*shortURL))
+		io.WriteString(w, string(result.ShortURL))
 	}
 }

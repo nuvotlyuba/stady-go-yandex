@@ -7,8 +7,8 @@ import (
 	"github.com/nuvotlyuba/study-go-yandex/config"
 	"github.com/nuvotlyuba/study-go-yandex/internal/app/apiserver/gzip"
 	"github.com/nuvotlyuba/study-go-yandex/internal/app/apiserver/logger"
-	"github.com/nuvotlyuba/study-go-yandex/internal/repository"
 	"github.com/nuvotlyuba/study-go-yandex/internal/service"
+	"github.com/nuvotlyuba/study-go-yandex/internal/store"
 	"github.com/nuvotlyuba/study-go-yandex/internal/transport/handler"
 	"go.uber.org/zap"
 )
@@ -34,7 +34,7 @@ func (s *APIServer) Start() error {
 
 	s.router.Use(logger.Middleware)
 	s.router.Use(gzip.Middleware)
-	repoVar := repository.NewVarRepository()
+	repoVar := store.New()
 	service := service.New(repoVar)
 	handler := handler.New(service)
 
