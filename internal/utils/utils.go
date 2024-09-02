@@ -25,6 +25,7 @@ func MakeShortURL(token *string) *models.URL {
 }
 
 func SwitchStorage() string {
+	fmt.Println(config.FileStoragePath, "config.FileStoragePath")
 	if config.FileStoragePath != "" {
 		return "file"
 	}
