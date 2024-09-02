@@ -8,15 +8,15 @@ import (
 
 var BaseURL string = `http://localhost:8080`
 var ServerAddress string = `:8080`
-var FileStoragePath string = ``
+var FileStoragePath string = `tmp/file.json`
 
 const AppLevel = DEVELOPMENT
 
 type Config struct {
-	BaseURL         string `env:"BASE_URL"`
-	ServerAddress   string `env:"SERVER_ADDRESS"`
-	AppLevel        Level  `env:"APP_LEVEL"`
-	FileStoragePath string `env:"FILE_STORAGE_PATH"`
+	BaseURL         string `env:"BASE_URL" envDefault:"http://localhost:8080"`
+	ServerAddress   string `env:"SERVER_ADDRESS" envDefault:":8080"`
+	AppLevel        Level  `env:"APP_LEVEL" envDefault:"development"`
+	FileStoragePath string `env:"FILE_STORAGE_PATH" envDefault:"tmp/file.json"`
 }
 
 func New() *Config {

@@ -34,8 +34,8 @@ func (s *APIServer) Start() error {
 
 	s.router.Use(logger.Middleware)
 	s.router.Use(gzip.Middleware)
-	repoVar := store.New()
-	service := service.New(repoVar)
+	repo := store.New()
+	service := service.New(repo)
 	handler := handler.New(service)
 
 	s.addRouter(handler)

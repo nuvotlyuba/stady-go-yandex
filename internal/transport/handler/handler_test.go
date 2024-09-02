@@ -5,9 +5,11 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strings"
 	"testing"
 
+	"github.com/nuvotlyuba/study-go-yandex/config"
 	"github.com/nuvotlyuba/study-go-yandex/internal/models"
 	"github.com/nuvotlyuba/study-go-yandex/internal/service"
 	"github.com/nuvotlyuba/study-go-yandex/internal/store"
@@ -55,13 +57,16 @@ func TestPostURL(t *testing.T) {
 			defer res.Body.Close()
 
 			assert.Equal(t, tt.want.statusCode, res.StatusCode, "Отличный от %d статус код", tt.want.statusCode)
-			assert.Contains(t, tt.want.contentType, res.Header.Get("Content-Type"), "Отличный от %s  Conent-Type", tt.want.contentType)
+			assert.Contains(t, res.Header.Get("Content-Type"), tt.want.contentType, "Отличный от %s  Conent-Type", tt.want.contentType)
 
 			body, err := io.ReadAll(res.Body)
 			require.NoError(t, err, "Ошибка чтения тела ответа")
 			err = res.Body.Close()
 			require.NoError(t, err)
 			assert.NotEmpty(t, string(body), "Тело ответа пустое")
+
+			os.Remove(config.FileStoragePath)
+
 		})
 	}
 }
@@ -101,8 +106,11 @@ func TestGetURL(t *testing.T) {
 			h.GetURL(w, r)
 			res := w.Result()
 			defer res.Body.Close()
-			assert.Contains(t, tt.want.contentType, res.Header.Get("Content-Type"), "Отличный от %s  Conent-Type", tt.want.contentType)
+
+			assert.Contains(t, res.Header.Get("Content-Type"), tt.want.contentType, "Отличный от %s  Conent-Type", tt.want.contentType)
 			assert.Equal(t, tt.want.statusCode, res.StatusCode, "Отличный от %d статус код", tt.want.statusCode)
+
+			os.Remove(config.FileStoragePath)
 		})
 	}
 }
@@ -144,7 +152,7 @@ func TestPostJSONURL(t *testing.T) {
 			res := w.Result()
 			defer res.Body.Close()
 
-			assert.Contains(t, tt.want.contentType, res.Header.Get("Content-Type"), "Отличный от %s  Conent-Type", tt.want.contentType)
+			assert.Contains(t, res.Header.Get("Content-Type"), tt.want.contentType, "Отличный от %s  Conent-Type", tt.want.contentType)
 			assert.Equal(t, tt.want.statusCode, res.StatusCode, "Отличный от %d статус код", tt.want.statusCode)
 
 			body, err := io.ReadAll(res.Body)
@@ -152,6 +160,8 @@ func TestPostJSONURL(t *testing.T) {
 			err = res.Body.Close()
 			require.NoError(t, err)
 			assert.NotEmpty(t, string(body), "Тело ответа пустое")
+
+			os.Remove(config.FileStoragePath)
 		})
 	}
 }
@@ -159,4 +169,12 @@ func TestPostJSONURL(t *testing.T) {
 func EnsureNewURL(token string, originalURL string) {
 	shortURL := utils.MakeShortURL(&token)
 	store.DataURL[*shortURL] = models.URL(originalURL)
+
+	obj := models.ObjURL{
+		UUID:        token,
+		ShortURL:    *shortURL,
+		OriginalURL: models.URL(originalURL),
+	}
+	f := store.NewFileRepository(config.FileStoragePath)
+	f.WriteNewURL(&obj)
 }
