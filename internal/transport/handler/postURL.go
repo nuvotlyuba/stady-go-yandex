@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 
@@ -23,7 +22,6 @@ func (h Handler) PostURL(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		fmt.Println(err, "err!!!!!")
 
 		w.Header().Set("Content-Type", string(types.TextContentType))
 		w.WriteHeader(http.StatusCreated)

@@ -20,6 +20,7 @@ import (
 )
 
 func TestPostURL(t *testing.T) {
+	config.FileStoragePath = "test.json"
 	type want struct {
 		contentType string
 		statusCode  int
@@ -60,6 +61,7 @@ func TestPostURL(t *testing.T) {
 			assert.Contains(t, res.Header.Get("Content-Type"), tt.want.contentType, "Отличный от %s  Conent-Type", tt.want.contentType)
 
 			body, err := io.ReadAll(res.Body)
+			fmt.Println(string(body), "BODY")
 			require.NoError(t, err, "Ошибка чтения тела ответа")
 			err = res.Body.Close()
 			require.NoError(t, err)
@@ -72,6 +74,7 @@ func TestPostURL(t *testing.T) {
 }
 
 func TestGetURL(t *testing.T) {
+	config.FileStoragePath = "test.json"
 	token := utils.MakeToken(8)
 	EnsureNewURL(*token, "https://yandex.ru")
 	type want struct {
@@ -116,6 +119,8 @@ func TestGetURL(t *testing.T) {
 }
 
 func TestPostJSONURL(t *testing.T) {
+	config.FileStoragePath = "test.json"
+
 	type want struct {
 		contentType string
 		statusCode  int
