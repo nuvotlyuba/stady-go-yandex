@@ -14,7 +14,7 @@ type MemRepo interface {
 }
 
 func (r MemRepository) SaveURL(data *models.ObjURL) {
-	DataURL[*&data.ShortURL] = *&data.OriginalURL
+	DataURL[data.ShortURL] = data.OriginalURL
 }
 
 func (r MemRepository) GetURL(shotURL *models.URL) (*models.URL, error) {
